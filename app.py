@@ -1,21 +1,29 @@
-from heapq import nlargest
 from string import punctuation
 
 import spacy
-from fastapi import Body, FastAPI, File, UploadFile
+from fastapi import FastAPI, File, Request, UploadFile
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from spacy.lang.en.stop_words import STOP_WORDS
 
 app = FastAPI()
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+templates = Jinja2Templates(directory="templates")
+
 INPUT_FILE = "input_file.txt"
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+
+
+@app.get("/", response_class=HTMLResponse)
+async def root(request: Request,):
+    return templates.TemplateResponse("item.html", {"request": request})
 
 @app.get("/summary")
-async def summary():
-    with open(INPUT_FILE, "r") as file:
+async def summary(request: Request,):
+    with open(INPUT_FILE, "r", encoding="utf8") as file:
         text =file.read().splitlines()
         text = ' '.join(text)
     
@@ -59,11 +67,10 @@ async def summary():
 
     final_summary = [word.text for word in summary]
     summary = ' '.join(final_summary)
-    print(summary)
-    return {"summarized": summary}
+    return templates.TemplateResponse("summary.html", {"request":request, "summary": summary})
 
 @app.post("/upload")
-def upload(file: UploadFile = File(...)):
+def upload(request:Request, file: UploadFile = File(...)):
     try:
         contents = file.file.read()
         with open(INPUT_FILE, 'wb') as f:
@@ -72,8 +79,7 @@ def upload(file: UploadFile = File(...)):
         return {"message": "There was an error uploading the file"}
     finally:
         file.file.close()
-
-    return {"message": f"Successfully uploaded {file.filename}"}
+    return templates.TemplateResponse("success.html", {"request": request})
 
 
 # with open("suresh raina.txt", "r") as file:
