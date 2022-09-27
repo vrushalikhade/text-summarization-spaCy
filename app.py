@@ -1,17 +1,24 @@
-import spacy
-from spacy.lang.en.stop_words import STOP_WORDS
-from string import punctuation
 from heapq import nlargest
-from fastapi import FastAPI, Body
+from string import punctuation
+
+import spacy
+from fastapi import Body, FastAPI, File, UploadFile
+from spacy.lang.en.stop_words import STOP_WORDS
 
 app = FastAPI()
+
+INPUT_FILE = "input_file.txt"
 
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
 
-@app.post("/summary")
-async def summary(text:str=Body(...)):
+@app.get("/summary")
+async def summary():
+    with open(INPUT_FILE, "r") as file:
+        text =file.read().splitlines()
+        text = ' '.join(text)
+    
     stopwords = list(STOP_WORDS)
         
     nlp = spacy.load('en_core_web_sm')
@@ -55,4 +62,19 @@ async def summary(text:str=Body(...)):
     print(summary)
     return {"summarized": summary}
 
+@app.post("/upload")
+def upload(file: UploadFile = File(...)):
+    try:
+        contents = file.file.read()
+        with open(INPUT_FILE, 'wb') as f:
+            f.write(contents)
+    except Exception:
+        return {"message": "There was an error uploading the file"}
+    finally:
+        file.file.close()
 
+    return {"message": f"Successfully uploaded {file.filename}"}
+
+
+# with open("suresh raina.txt", "r") as file:
+#     data = file.read().replace("\n", "")
