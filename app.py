@@ -1,3 +1,4 @@
+import os
 from string import punctuation
 
 import spacy
@@ -23,9 +24,17 @@ async def root(request: Request,):
 
 @app.get("/summary")
 async def summary(request: Request,):
-    with open(INPUT_FILE, "r", encoding="utf8") as file:
-        text =file.read().splitlines()
-        text = ' '.join(text)
+    try:
+        with open(INPUT_FILE, "r", encoding="utf8") as file:
+            text =file.read().splitlines()
+            text = ' '.join(text)
+    except:
+        return {"message": "There was an error summarizing the file"}
+    finally:
+        if os.path.isfile(INPUT_FILE):
+            os.remove(INPUT_FILE)
+            file.close()
+        
     
     stopwords = list(STOP_WORDS)
         
