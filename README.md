@@ -8,7 +8,7 @@ Text summarization is an interesting machine learning field that is increasingly
 
 •	FAST API :
 
-FAST API is a modern, fast (high-performance), web framework for building APIs with Python 3.7+ based on standard Python type hints.
+FAST API is a modern, fast , web framework for building APIs with Python 3.7+ based on standard Python type hints.
 The key features made available by Fast API include High performance, fewer bugs, easy to use and learn, robust, great editor support, etc.
 
 •	Steps to clone and set-up the project :
