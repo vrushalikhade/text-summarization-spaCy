@@ -21,13 +21,11 @@ The key features made available by Fast API include High performance, fewer bugs
  
  4) Install all dependencies - pip install -r requirements.txt
  
- 5) Run the app - python app.py
+ 5) Run through Uvicorn - uvicorn app:app --reload
  
- 6) Run through Uvicorn - uvicorn app:app --reload
+ 6) Run the localhost request on your browser - https://localhost:8000/docs
  
- 7) Run the localhost request on your browser - https://localhost:8000/docs
- 
- 8) Now you will be directed to the Fast API routing methods. Firstly, you need to upload your text file in the POST summary. After successfully uploading your file, you can execute the Get Summary method and acquire the summarized content.
+ 7) Now you will be directed to the Fast API routing methods. Firstly, you need to upload your text file in the POST summary. After successfully uploading your file, you can execute the Get Summary method and acquire the summarized content.
  
 
 
